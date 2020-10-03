@@ -4,7 +4,11 @@
 // perlin_noise_101 by Rupert Russell fork of Shade 3.6 by Roni Kaufman https://www.openprocessing.org/sketch/842192/
 // 4 October 2020
 // draws and saves grids of 1000 x 1000 x 10
+// code on Github at: https: github.com/rupertrussell/perlin_noise_101
+// artwork on Redbubble at: https://www.redbubble.com/people/rupertrussell/shop
 
+
+int maximumDensity = 200;
 float x = 0;
 float t = 0;
 
@@ -12,7 +16,7 @@ float colors;
 float resolutions;
 float res = 1 / random(200, 1000);
 float noice, digit, hue;
-float density = random(10, 500);
+float density = random(10, maximumDensity);
 int count = 0;
 int gridCount=0;
 
@@ -30,6 +34,7 @@ void setup() {
 
 void draw() {
 
+  // draw one line from top to bottom of gridsize
   for (float y = 0; y < gridSize; y += 0.5) {
     noice = noise(x * res, y * res, t);
     digit = floor(noice * density);
@@ -46,19 +51,20 @@ void draw() {
     fill(hue);
     square(x + xOffset, y + yOffset, 1);
   }
-
-
-
-  x += 0.5;
+  x += 1;
 
   if (x >= gridSize) {
+    println("density = " + density);
     println("count = " + count);
-    density = random(10, 500);
-    t += 0.05;
-    x = -1;
+    println("xOffset = " + xOffset);
+    println("yOffset = " + yOffset);
+    density = random(10, maximumDensity);
+    t += 1.5;
+    x = 0;
     count++;
 
-    if (xOffset <= width) {
+    // 
+    if (xOffset <= width - gridSize * 2) {
       xOffset = xOffset + gridSize;
     } else {
       xOffset = 0;
@@ -66,11 +72,12 @@ void draw() {
     }
   }
 
-  if (yOffset >= height + gridSize) {
+  if (yOffset > height - gridSize) {
     save(gridCount + ".png");
     gridCount ++;
     xOffset = 0;
     yOffset = 0;
+    count = 0;
     // exit();
   }
 }
